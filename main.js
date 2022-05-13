@@ -89,7 +89,7 @@ async function updateTypes(db, options) {
       var _overrides$key;
 
       const value = (_overrides$key = overrides[key]) !== null && _overrides$key !== void 0 ? _overrides$key : (0, _upperFirst2.default)((0, _camelCase2.default)(key));
-      output.write(`  "${key}": ${value},\n`);
+      output.write(`  [Table.${value}]: ${value},\n`);
     });
     output.write("};\n\n"); // Construct TypeScript db record types
 
