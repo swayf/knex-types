@@ -147,7 +147,7 @@ export async function updateTypes(db: Knex, options: Options): Promise<void> {
       );
 
     // The list of database tables as enum
-    output.write("export enum Table {\n");
+    output.write("export const TABLE = {\n");
     const tableSet = new Set(
       columns.map((x) => {
         const schema = x.schema !== "public" ? `${x.schema}.` : "";
@@ -156,14 +156,14 @@ export async function updateTypes(db: Knex, options: Options): Promise<void> {
     );
     Array.from(tableSet).forEach((value) => {
       const key = overrides[value] ?? upperFirst(camelCase(value));
-      output.write(`  ${key} = "${value}",\n`);
+      output.write(`  ${key}: '${value}',\n`);
     });
-    output.write("}\n\n");
+    output.write("} as const;\n\n");
     // The list of tables as type
     output.write("export type Tables = {\n");
     Array.from(tableSet).forEach((key) => {
       const value = overrides[key] ?? upperFirst(camelCase(key));
-      output.write(`  [Table.${value}]: ${value},\n`);
+      output.write(`  '${key}': ${value},\n`);
     });
     output.write("};\n\n");
 

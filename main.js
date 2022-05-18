@@ -71,7 +71,7 @@ async function updateTypes(db, options) {
 
     const columns = await db.withSchema("information_schema").table("columns").whereIn("table_schema", includeSchemas).whereNotIn("table_schema", excludeSchemas).whereNotIn("table_name", exclude).orderBy("table_schema").orderBy("table_name").orderBy("ordinal_position").select("table_schema as schema", "table_name as table", "column_name as column", db.raw("(is_nullable = 'YES') as nullable"), "column_default as default", "data_type as type", "udt_name as udt"); // The list of database tables as enum
 
-    output.write("export enum Table {\n");
+    output.write("export const TABLE = {\n");
     const tableSet = new Set(columns.map(x => {
       const schema = x.schema !== "public" ? `${x.schema}.` : "";
       return `${schema}${x.table}`;
@@ -80,16 +80,16 @@ async function updateTypes(db, options) {
       var _overrides$value;
 
       const key = (_overrides$value = overrides[value]) !== null && _overrides$value !== void 0 ? _overrides$value : (0, _upperFirst2.default)((0, _camelCase2.default)(value));
-      output.write(`  ${key} = "${value}",\n`);
+      output.write(`  ${key}: '${value}',\n`);
     });
-    output.write("}\n\n"); // The list of tables as type
+    output.write("} as const;\n\n"); // The list of tables as type
 
     output.write("export type Tables = {\n");
     Array.from(tableSet).forEach(key => {
       var _overrides$key;
 
       const value = (_overrides$key = overrides[key]) !== null && _overrides$key !== void 0 ? _overrides$key : (0, _upperFirst2.default)((0, _camelCase2.default)(key));
-      output.write(`  [Table.${value}]: ${value},\n`);
+      output.write(`  '${key}': ${value},\n`);
     });
     output.write("};\n\n"); // Construct TypeScript db record types
 
