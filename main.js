@@ -100,6 +100,7 @@ async function updateTypes(db, options) {
         const tableName = (_overrides$x$table = overrides[x.table]) !== null && _overrides$x$table !== void 0 ? _overrides$x$table : (0, _upperFirst2.default)((0, _camelCase2.default)(x.table));
         const schemaName = x.schema !== "public" ? (0, _upperFirst2.default)((0, _camelCase2.default)(x.schema)) : "";
         output.write(`export type ${schemaName}${tableName} = {\n`);
+        output.write(`  __tag: ${x.table};\n`);
       }
 
       let type = x.type === "ARRAY" ? `${getType(x.udt.substring(1), enumsMap, x.default)}[]` : getType(x.udt, enumsMap, x.default);

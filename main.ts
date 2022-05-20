@@ -174,6 +174,7 @@ export async function updateTypes(db: Knex, options: Options): Promise<void> {
         const schemaName =
           x.schema !== "public" ? upperFirst(camelCase(x.schema)) : "";
         output.write(`export type ${schemaName}${tableName} = {\n`);
+        output.write(`  __tag: ${x.table};\n`);
       }
 
       let type =
